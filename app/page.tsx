@@ -1,103 +1,202 @@
-import Image from "next/image";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <>
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-black via-gray-950 to-black">
+        <div className="container mx-auto px-4 py-24 sm:py-32">
+          <div className="mx-auto max-w-4xl text-center">
+            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
+              Transform Your Enterprise with{" "}
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                Intelligent AI Solutions
+              </span>
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-muted-foreground">
+              TwoPelicans AI partners with forward-thinking enterprises to implement 
+              cutting-edge artificial intelligence that drives measurable business outcomes. 
+              From strategy to deployment, we&apos;re your trusted AI transformation partner.
+            </p>
+            <div className="mt-10 flex items-center justify-center gap-6">
+              <Link href="/contact">
+                <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all">
+                  Schedule Consultation
+                </Button>
+              </Link>
+              <Link href="/services">
+                <Button size="lg" variant="outline">
+                  Explore Services
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+        <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
+          <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-cyan-600 to-purple-600 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
+        </div>
+        <div className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
+          <div className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-purple-600 to-blue-600 opacity-20 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"></div>
+        </div>
+      </section>
+
+      {/* Value Propositions */}
+      <section className="py-24 sm:py-32">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Why Leading Enterprises Choose TwoPelicans AI
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              We deliver comprehensive AI solutions that transform operations and create competitive advantages
+            </p>
+          </div>
+          <div className="mx-auto mt-16 max-w-6xl">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+              <div className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-8 hover:bg-white/10 hover:border-cyan-500/50 transition-all group">
+                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-600/20 group-hover:from-cyan-500/30 group-hover:to-blue-600/30 transition-all">
+                  <svg className="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <h3 className="mb-2 text-xl font-semibold">Strategic AI Consulting</h3>
+                <p className="text-muted-foreground">
+                  Develop a comprehensive AI strategy aligned with your business objectives. 
+                  We identify high-impact opportunities and create actionable roadmaps for AI adoption.
+                </p>
+              </div>
+              
+              <div className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-8 hover:bg-white/10 hover:border-cyan-500/50 transition-all group">
+                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-600/20 group-hover:from-cyan-500/30 group-hover:to-purple-600/30 transition-all">
+                  <svg className="h-6 w-6 text-cyan-600 dark:text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                  </svg>
+                </div>
+                <h3 className="mb-2 text-xl font-semibold">Custom AI Development</h3>
+                <p className="text-muted-foreground">
+                  Build tailored AI solutions designed specifically for your unique challenges. 
+                  From NLP to computer vision, we develop and deploy production-ready AI systems.
+                </p>
+              </div>
+              
+              <div className="relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-8 hover:bg-white/10 hover:border-cyan-500/50 transition-all group">
+                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-600/20 group-hover:from-purple-500/30 group-hover:to-pink-600/30 transition-all">
+                  <svg className="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <h3 className="mb-2 text-xl font-semibold">Seamless Integration</h3>
+                <p className="text-muted-foreground">
+                  Integrate AI capabilities into your existing infrastructure with minimal disruption. 
+                  We ensure smooth deployment and provide ongoing support for optimal performance.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="relative bg-gradient-to-r from-purple-900/50 via-cyan-900/50 to-blue-900/50 py-16 backdrop-blur border-y border-white/10">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+            <div className="text-center">
+              <div className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">150+</div>
+              <div className="mt-2 text-gray-400">AI Projects Delivered</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">40%</div>
+              <div className="mt-2 text-gray-400">Average Cost Reduction</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">98%</div>
+              <div className="mt-2 text-gray-400">Client Satisfaction Rate</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Preview */}
+      <section className="py-24 sm:py-32">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Our AI Solutions Portfolio
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Comprehensive AI services tailored to enterprise needs
+            </p>
+          </div>
+          <div className="mx-auto mt-16 grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
+            <div className="group relative rounded-xl border border-white/10 bg-white/5 backdrop-blur p-8 hover:bg-white/10 hover:border-cyan-500/50 transition-all">
+              <h3 className="text-xl font-semibold mb-3">Generative AI & LLMs</h3>
+              <p className="text-muted-foreground mb-4">
+                Harness the power of large language models for content generation, automation, and intelligent assistants.
+              </p>
+              <Link href="/services" className="text-cyan-400 hover:text-cyan-300 font-medium">
+                Learn more →
+              </Link>
+            </div>
+            
+            <div className="group relative rounded-xl border border-white/10 bg-white/5 backdrop-blur p-8 hover:bg-white/10 hover:border-cyan-500/50 transition-all">
+              <h3 className="text-xl font-semibold mb-3">Predictive Analytics</h3>
+              <p className="text-muted-foreground mb-4">
+                Transform data into actionable insights with advanced machine learning models for forecasting and optimization.
+              </p>
+              <Link href="/services" className="text-cyan-400 hover:text-cyan-300 font-medium">
+                Learn more →
+              </Link>
+            </div>
+            
+            <div className="group relative rounded-xl border border-white/10 bg-white/5 backdrop-blur p-8 hover:bg-white/10 hover:border-cyan-500/50 transition-all">
+              <h3 className="text-xl font-semibold mb-3">Process Automation</h3>
+              <p className="text-muted-foreground mb-4">
+                Streamline operations with intelligent automation that reduces costs and improves efficiency.
+              </p>
+              <Link href="/services" className="text-cyan-400 hover:text-cyan-300 font-medium">
+                Learn more →
+              </Link>
+            </div>
+            
+            <div className="group relative rounded-xl border border-white/10 bg-white/5 backdrop-blur p-8 hover:bg-white/10 hover:border-cyan-500/50 transition-all">
+              <h3 className="text-xl font-semibold mb-3">Computer Vision</h3>
+              <p className="text-muted-foreground mb-4">
+                Deploy visual AI for quality control, security, and advanced image analysis applications.
+              </p>
+              <Link href="/services" className="text-cyan-400 hover:text-cyan-300 font-medium">
+                Learn more →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative bg-gradient-to-b from-gray-950 to-black py-16 border-t border-white/10">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight">
+              Ready to Transform Your Business with AI?
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Let&apos;s discuss how AI can drive growth and innovation in your organization.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/contact">
+                <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all">
+                  Schedule Free Consultation
+                </Button>
+              </Link>
+              <Link href="/insights">
+                <Button size="lg" variant="outline">
+                  Read Our Insights
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  )
 }
