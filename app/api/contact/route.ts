@@ -59,11 +59,13 @@ export async function POST(request: Request) {
       
       console.log("Email sent successfully:", data)
       
-      // Resend returns an object with an id property on success
-      if (data && data.id) {
-        return NextResponse.json({ success: true, emailId: data.id })
+      // Resend returns {data: {id: "..."}, error: null} on success
+      if (data && 'data' in data && data.data) {
+        return NextResponse.json({ success: true, emailId: data.data.id })
+      } else if (data && 'error' in data && data.error) {
+        throw new Error(`Email send failed: ${data.error}`)
       } else if (data) {
-        // If data exists but no id, still consider it successful
+        // If data exists but unexpected format, still consider it successful
         return NextResponse.json({ success: true })
       } else {
         throw new Error("Email send failed")
