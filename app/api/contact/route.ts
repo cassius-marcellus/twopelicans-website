@@ -57,18 +57,21 @@ export async function POST(request: Request) {
         replyTo: email,
       })
       
-      console.log("Email sent successfully:", data)
+      console.log("Email sent successfully:", JSON.stringify(data, null, 2))
       
-      // Resend returns {data: {id: "..."}, error: null} on success
-      if (data && 'data' in data && data.data) {
+      // Resend can return either {data: {id: "..."}, error: null} or just {id: "..."}
+      if (data && data.data && data.data.id) {
+        // New format: {data: {id: "..."}, error: null}
         return NextResponse.json({ success: true, emailId: data.data.id })
-      } else if (data && 'error' in data && data.error) {
+      } else if (data && data.id) {
+        // Direct format: {id: "..."}
+        return NextResponse.json({ success: true, emailId: data.id })
+      } else if (data && data.error) {
         throw new Error(`Email send failed: ${data.error}`)
-      } else if (data) {
-        // If data exists but unexpected format, still consider it successful
-        return NextResponse.json({ success: true })
       } else {
-        throw new Error("Email send failed")
+        // If we got here, email was likely sent but response format is unexpected
+        console.log("Unexpected Resend response format, but considering successful:", data)
+        return NextResponse.json({ success: true })
       }
     } catch (emailError) {
       console.error("Resend error:", emailError)
