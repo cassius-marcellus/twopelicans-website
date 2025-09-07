@@ -38,14 +38,14 @@
 
 ### Tech Stack
 - Language: TypeScript/JavaScript
-- Framework: Next.js 14 (App Router) - for SEO, performance, and modern React features
+- Framework: Next.js 15.5.2 (App Router + Turbopack) - for SEO, performance, and modern React features
 - Styling: Tailwind CSS + shadcn/ui components
 - Database: PostgreSQL (Supabase for auth, data, and real-time features)
 - Hosting: Vercel (seamless Next.js deployment) - LIVE at https://twopelicans.ai
 - Domain: Porkbun (twopelicans.ai) - DNS configured, SSL active
 - Package Manager: npm
 - Analytics: Google Analytics 4 (ID: G-K9R6TYLCTH) - Active and tracking
-- Email: Resend API - Verified domain, sending from hello@twopelicans.ai
+- Email: Resend API - Subdomain send.twopelicans.ai pending verification
 
 ### Commands
 ```bash
@@ -76,18 +76,24 @@ DEPLOYED & LIVE at https://twopelicans.ai
 **Completed Features:**
 - ✅ Homepage with hero, value props, services overview
 - ✅ Services page with 6 core AI offerings
-- ✅ About page with team and mission
+- ✅ About page with custom "AI Deployment Partner" messaging
+- ✅ Blog section with 4 AI-focused articles (listing + individual pages)
 - ✅ Insights page for thought leadership
-- ✅ Contact form with Resend email integration (working)
+- ✅ Contact form with Resend email integration (pending domain verification)
 - ✅ Dark futuristic theme with glass morphism
 - ✅ Fully responsive mobile-first design
 - ✅ Google Analytics tracking
-- ✅ Professional email from hello@twopelicans.ai
+- ✅ Custom domain with SSL (twopelicans.ai)
 
 **Environment Variables (set in Vercel):**
 - RESEND_API_KEY=[NEVER COMMIT - Stored in .env.local and Vercel]
-- EMAIL_TO=hello@twopelicans.ai
-- EMAIL_FROM=hello@twopelicans.ai
+- EMAIL_TO=ray@twopelicans.ai
+- EMAIL_FROM=hello@send.twopelicans.ai (update after Resend verifies subdomain)
+
+**Pending Tasks:**
+- Await Resend support response for MX/SPF verification issue
+- Update EMAIL_FROM in Vercel after domain verification
+- Test contact form functionality once verified
 
 Must convey trust, innovation, and technical excellence while remaining accessible to non-technical executives.
 
