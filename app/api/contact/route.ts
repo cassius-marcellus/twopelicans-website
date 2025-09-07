@@ -54,7 +54,7 @@ export async function POST(request: Request) {
         to: process.env.EMAIL_TO || "hello@twopelicans.ai",
         subject: `New Inquiry from ${name} at ${company}`,
         html: emailContent,
-        reply_to: email,
+        replyTo: email,
       })
       
       console.log("Email sent successfully:", data)
