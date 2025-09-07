@@ -43,6 +43,11 @@ export function Header() {
                   </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
+                  <Link href="/blog" className={navigationMenuTriggerStyle()}>
+                    Blog
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
                   <Link href="/insights" className={navigationMenuTriggerStyle()}>
                     Insights
                   </Link>
