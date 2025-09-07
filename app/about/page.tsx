@@ -9,15 +9,15 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              Leading the{" "}
+              Your{" "}
               <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                AI Revolution
+                AI Deployment Partner
               </span>
             </h1>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              TwoPelicans AI is at the forefront of enterprise AI transformation, 
-              combining deep technical expertise with strategic business acumen to 
-              deliver solutions that matter.
+              TwoPelicans AI draws from decades of real-world, hands-on experience 
+              optimizing processes for businesses of all sizes, and leverages that 
+              knowledge to build custom AI solutions for our partners.
             </p>
           </div>
         </div>
