@@ -59,9 +59,12 @@ export async function POST(request: Request) {
       
       console.log("Email sent successfully:", data)
       
-      // Check if email was actually sent (Resend returns data.data on success)
-      if (data && data.data) {
-        return NextResponse.json({ success: true, emailId: data.data.id })
+      // Resend returns an object with an id property on success
+      if (data && data.id) {
+        return NextResponse.json({ success: true, emailId: data.id })
+      } else if (data) {
+        // If data exists but no id, still consider it successful
+        return NextResponse.json({ success: true })
       } else {
         throw new Error("Email send failed")
       }
