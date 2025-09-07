@@ -85,7 +85,7 @@ DEPLOYED & LIVE at https://twopelicans.ai
 - ✅ Professional email from hello@twopelicans.ai
 
 **Environment Variables (set in Vercel):**
-- RESEND_API_KEY=re_YcHJ1Z8L_M6aHTQKU1y8MwD4tyhh4Cw1n
+- RESEND_API_KEY=[NEVER COMMIT - Stored in .env.local and Vercel]
 - EMAIL_TO=hello@twopelicans.ai
 - EMAIL_FROM=hello@twopelicans.ai
 
