@@ -49,7 +49,7 @@ export default function ContactPage() {
         console.error("Form submission error:", result)
         setSubmitStatus("error")
       }
-    } catch (error) {
+    } catch {
       setSubmitStatus("error")
     } finally {
       setIsSubmitting(false)
@@ -63,14 +63,14 @@ export default function ContactPage() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              Let's Build Your{" "}
+              Let&apos;s Build Your{" "}
               <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
                 AI Future Together
               </span>
             </h1>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
               Ready to transform your business with AI? Tell us about your project 
-              and we'll get back to you within 24 hours.
+              and we&apos;ll get back to you within 24 hours.
             </p>
           </div>
         </div>
@@ -177,7 +177,7 @@ export default function ContactPage() {
 
                 {submitStatus === "success" && (
                   <div className="rounded-lg bg-green-500/10 border border-green-500/50 p-4 text-green-400">
-                    Thank you for your inquiry! We'll get back to you within 24 hours.
+                    Thank you for your inquiry! We&apos;ll get back to you within 24 hours.
                   </div>
                 )}
 
