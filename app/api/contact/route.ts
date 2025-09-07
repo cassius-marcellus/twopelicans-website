@@ -59,19 +59,26 @@ export async function POST(request: Request) {
       
       console.log("Email sent successfully:", JSON.stringify(data, null, 2))
       
-      // Resend can return either {data: {id: "..."}, error: null} or just {id: "..."}
-      if (data && data.data && data.data.id) {
-        // New format: {data: {id: "..."}, error: null}
-        return NextResponse.json({ success: true, emailId: data.data.id })
-      } else if (data && data.id) {
-        // Direct format: {id: "..."}
-        return NextResponse.json({ success: true, emailId: data.id })
-      } else if (data && data.error) {
-        throw new Error(`Email send failed: ${data.error}`)
-      } else {
+      // TypeScript-safe response handling
+      if (data) {
+        // Check for the nested format first
+        if ('data' in data && data.data) {
+          return NextResponse.json({ success: true, emailId: data.data.id })
+        }
+        // Check for error
+        if ('error' in data && data.error) {
+          throw new Error(`Email send failed: ${JSON.stringify(data.error)}`)
+        }
+        // Check for direct id (though TypeScript says this shouldn't happen)
+        if ('id' in data) {
+          const responseWithId = data as unknown as {id: string}
+          return NextResponse.json({ success: true, emailId: responseWithId.id })
+        }
         // If we got here, email was likely sent but response format is unexpected
         console.log("Unexpected Resend response format, but considering successful:", data)
         return NextResponse.json({ success: true })
+      } else {
+        throw new Error("No response data from Resend")
       }
     } catch (emailError) {
       console.error("Resend error:", emailError)
