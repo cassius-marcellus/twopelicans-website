@@ -201,8 +201,8 @@ function convertMarkdownToHtml(markdown: string): string {
     // Line breaks
     .replace(/\n/g, '<br>')
     
-  // Wrap lists
-  html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+  // Wrap lists (using [\s\S] instead of /s flag for ES5 compatibility)
+  html = html.replace(/(<li>[\s\S]*<\/li>)/, '<ul>$1</ul>')
   
   // Wrap in paragraph tags
   if (!html.startsWith('<')) {

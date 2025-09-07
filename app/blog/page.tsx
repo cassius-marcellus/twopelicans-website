@@ -1,6 +1,6 @@
 import { blogPosts } from "@/lib/blog-data"
 import Link from "next/link"
-import { Calendar, Clock, Tag, ArrowRight } from "lucide-react"
+import { Calendar, Clock, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function BlogPage() {
