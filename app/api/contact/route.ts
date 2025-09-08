@@ -67,7 +67,13 @@ export async function POST(request: Request) {
       
       // TypeScript-safe response handling
       if (data) {
-        // Check for the nested format first
+        // Check for direct id format first (Resend v6 format)
+        if ('id' in data) {
+          const responseWithId = data as unknown as {id: string}
+          console.log("Email sent successfully with ID:", responseWithId.id)
+          return NextResponse.json({ success: true, emailId: responseWithId.id })
+        }
+        // Check for the nested format (older format)
         if ('data' in data && data.data) {
           console.log("Email sent successfully with ID:", data.data.id)
           return NextResponse.json({ success: true, emailId: data.data.id })
@@ -76,12 +82,6 @@ export async function POST(request: Request) {
         if ('error' in data && data.error) {
           console.error("Resend API returned error:", data.error)
           throw new Error(`Email send failed: ${JSON.stringify(data.error)}`)
-        }
-        // Check for direct id (though TypeScript says this shouldn't happen)
-        if ('id' in data) {
-          const responseWithId = data as unknown as {id: string}
-          console.log("Email sent successfully with ID:", responseWithId.id)
-          return NextResponse.json({ success: true, emailId: responseWithId.id })
         }
         // If we got here, email was likely sent but response format is unexpected
         console.log("Unexpected Resend response format, but considering successful:", data)
