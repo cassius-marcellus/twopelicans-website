@@ -45,33 +45,42 @@ export async function POST(request: Request) {
 
     // Send email using Resend
     try {
-      console.log("Attempting to send email via Resend...")
-      console.log("From:", process.env.EMAIL_FROM || "onboarding@resend.dev")
-      console.log("To:", process.env.EMAIL_TO || "hello@twopelicans.ai")
+      const fromEmail = process.env.EMAIL_FROM || "hello@send.twopelicans.ai"
+      const toEmail = process.env.EMAIL_TO || "ray@twopelicans.ai"
+      
+      console.log("=== Email Configuration ===")
+      console.log("API Key exists:", !!process.env.RESEND_API_KEY)
+      console.log("API Key length:", process.env.RESEND_API_KEY?.length)
+      console.log("From:", fromEmail)
+      console.log("To:", toEmail)
+      console.log("===========================")
       
       const data = await resend.emails.send({
-        from: process.env.EMAIL_FROM || "onboarding@resend.dev",
-        to: process.env.EMAIL_TO || "hello@twopelicans.ai",
+        from: fromEmail,
+        to: toEmail,
         subject: `New Inquiry from ${name} at ${company}`,
         html: emailContent,
         replyTo: email,
       })
       
-      console.log("Email sent successfully:", JSON.stringify(data, null, 2))
+      console.log("Resend API Response:", JSON.stringify(data, null, 2))
       
       // TypeScript-safe response handling
       if (data) {
         // Check for the nested format first
         if ('data' in data && data.data) {
+          console.log("Email sent successfully with ID:", data.data.id)
           return NextResponse.json({ success: true, emailId: data.data.id })
         }
         // Check for error
         if ('error' in data && data.error) {
+          console.error("Resend API returned error:", data.error)
           throw new Error(`Email send failed: ${JSON.stringify(data.error)}`)
         }
         // Check for direct id (though TypeScript says this shouldn't happen)
         if ('id' in data) {
           const responseWithId = data as unknown as {id: string}
+          console.log("Email sent successfully with ID:", responseWithId.id)
           return NextResponse.json({ success: true, emailId: responseWithId.id })
         }
         // If we got here, email was likely sent but response format is unexpected
@@ -80,14 +89,28 @@ export async function POST(request: Request) {
       } else {
         throw new Error("No response data from Resend")
       }
-    } catch (emailError) {
-      console.error("Resend error:", emailError)
-      throw emailError
+    } catch (emailError: any) {
+      console.error("=== Resend Error Details ===")
+      console.error("Error message:", emailError?.message)
+      console.error("Error name:", emailError?.name)
+      console.error("Full error:", emailError)
+      console.error("============================")
+      
+      // Provide more specific error message based on error type
+      let errorMessage = "Failed to send message"
+      if (emailError?.message?.includes("domain")) {
+        errorMessage = "Email domain verification issue. Please try again later."
+      } else if (emailError?.message?.includes("API")) {
+        errorMessage = "Email service configuration error. Please contact support."
+      }
+      
+      throw new Error(errorMessage)
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Contact form error:", error)
+    const errorMessage = error?.message || "Failed to send message"
     return NextResponse.json(
-      { success: false, error: "Failed to send message" },
+      { success: false, error: errorMessage },
       { status: 500 }
     )
   }

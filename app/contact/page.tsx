@@ -46,10 +46,15 @@ export default function ContactPage() {
         setSubmitStatus("success")
         e.currentTarget.reset()
       } else {
-        console.error("Form submission error:", result)
+        console.error("Form submission failed:", {
+          status: response.status,
+          statusText: response.statusText,
+          result
+        })
         setSubmitStatus("error")
       }
-    } catch {
+    } catch (error) {
+      console.error("Network or parsing error:", error)
       setSubmitStatus("error")
     } finally {
       setIsSubmitting(false)
