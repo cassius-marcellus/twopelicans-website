@@ -98,40 +98,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-24">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Our Leadership Team</h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Experts driving AI innovation and transformation
-            </p>
-          </div>
-          <div className="mx-auto mt-16 max-w-5xl">
-            <div className="grid gap-12 md:grid-cols-2">
-              <div className="flex flex-col items-center text-center">
-                <div className="mb-4 h-32 w-32 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400"></div>
-                <h3 className="text-xl font-semibold">Ray Khatir</h3>
-                <p className="text-sm text-muted-foreground">Co-Founder & CEO</p>
-                <p className="mt-3 text-sm text-muted-foreground">
-                  Visionary leader with 15+ years in AI and enterprise technology. 
-                  Former senior roles at leading tech companies, driving AI adoption 
-                  across Fortune 500 organizations.
-                </p>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <div className="mb-4 h-32 w-32 rounded-full bg-gradient-to-br from-cyan-400 to-indigo-400"></div>
-                <h3 className="text-xl font-semibold">AI Partner</h3>
-                <p className="text-sm text-muted-foreground">Co-Founder & CTO</p>
-                <p className="mt-3 text-sm text-muted-foreground">
-                  Technical architect with deep expertise in machine learning and AI systems. 
-                  Led breakthrough AI implementations that transformed industry practices.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Why Choose Us */}
       <section className="bg-gradient-to-r from-blue-600 to-cyan-600 py-16 text-white">
