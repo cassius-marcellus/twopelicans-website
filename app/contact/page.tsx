@@ -197,19 +197,9 @@ export default function ContactPage() {
               </form>
             </div>
 
-            {/* Additional Contact Info */}
-            <div className="mt-12 grid gap-6 md:grid-cols-2">
-              <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur p-6">
-                <h3 className="mb-2 text-lg font-semibold">Direct Contact</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Prefer email? Reach out directly:
-                </p>
-                <a href="mailto:hello@twopelicans.ai" className="text-cyan-400 hover:text-cyan-300">
-                  hello@twopelicans.ai
-                </a>
-              </div>
-              
-              <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur p-6">
+            {/* Response Time Info */}
+            <div className="mt-12 mx-auto max-w-md">
+              <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur p-6 text-center">
                 <h3 className="mb-2 text-lg font-semibold">Response Time</h3>
                 <p className="text-sm text-muted-foreground">
                   We typically respond within 24 hours during business days. 
