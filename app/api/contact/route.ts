@@ -89,26 +89,28 @@ export async function POST(request: Request) {
       } else {
         throw new Error("No response data from Resend")
       }
-    } catch (emailError: any) {
+    } catch (emailError) {
+      const err = emailError as Error
       console.error("=== Resend Error Details ===")
-      console.error("Error message:", emailError?.message)
-      console.error("Error name:", emailError?.name)
+      console.error("Error message:", err?.message)
+      console.error("Error name:", err?.name)
       console.error("Full error:", emailError)
       console.error("============================")
       
       // Provide more specific error message based on error type
       let errorMessage = "Failed to send message"
-      if (emailError?.message?.includes("domain")) {
+      if (err?.message?.includes("domain")) {
         errorMessage = "Email domain verification issue. Please try again later."
-      } else if (emailError?.message?.includes("API")) {
+      } else if (err?.message?.includes("API")) {
         errorMessage = "Email service configuration error. Please contact support."
       }
       
       throw new Error(errorMessage)
     }
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error
     console.error("Contact form error:", error)
-    const errorMessage = error?.message || "Failed to send message"
+    const errorMessage = err?.message || "Failed to send message"
     return NextResponse.json(
       { success: false, error: errorMessage },
       { status: 500 }
