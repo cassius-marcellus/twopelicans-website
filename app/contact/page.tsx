@@ -22,7 +22,8 @@ export default function ContactPage() {
     setIsSubmitting(true)
     setSubmitStatus("idle")
 
-    const formData = new FormData(e.currentTarget)
+    const form = e.currentTarget
+    const formData = new FormData(form)
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
@@ -34,35 +35,21 @@ export default function ContactPage() {
     }
 
     try {
-      console.log("Submitting form with data:", data)
-      
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       })
 
-      console.log("Response status:", response.status, response.statusText)
-      console.log("Response ok:", response.ok)
-      
       const result = await response.json()
-      console.log("Response body:", result)
       
       if (response.ok && result.success) {
-        console.log("Form submission successful!")
         setSubmitStatus("success")
-        e.currentTarget.reset()
+        form.reset()
       } else {
-        console.error("Form submission failed:", {
-          status: response.status,
-          statusText: response.statusText,
-          ok: response.ok,
-          result
-        })
         setSubmitStatus("error")
       }
-    } catch (error) {
-      console.error("Network or parsing error:", error)
+    } catch {
       setSubmitStatus("error")
     } finally {
       setIsSubmitting(false)
