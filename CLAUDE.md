@@ -138,7 +138,11 @@ Must convey trust, innovation, and technical excellence while remaining accessib
 - **session-notes**: Document session work (quick mode or interactive editor)
 
 ### Recommended Workflow
-1. **New Project Setup**:
+1. **Resume Session - ALWAYS CHECK FIRST**:
+   - Check `ACTIVE_ISSUES.md` for any urgent bugs
+   - Fix critical issues before new work
+
+2. **New Project Setup**:
    - Run `claude-copy` to create CLAUDE.md from this template
    - Edit CLAUDE.md to add project-specific details
    - Run `claude-context` to load context into Claude
