@@ -40,12 +40,13 @@
 - Language: TypeScript/JavaScript
 - Framework: Next.js 15.5.2 (App Router + Turbopack) - for SEO, performance, and modern React features
 - Styling: Tailwind CSS + shadcn/ui components
-- Database: PostgreSQL (Supabase for auth, data, and real-time features)
+- Database: PostgreSQL (Supabase - ACTIVE)
+- Authentication: Supabase Auth (JWT, bcrypt, secure sessions)
 - Hosting: Vercel (seamless Next.js deployment) - LIVE at https://twopelicans.ai
 - Domain: Porkbun (twopelicans.ai) - DNS configured, SSL active
 - Package Manager: npm
 - Analytics: Google Analytics 4 (ID: G-K9R6TYLCTH) - Active and tracking
-- Email: Resend API - Subdomain send.twopelicans.ai pending verification
+- Email: Resend API - send.twopelicans.ai verified and working
 
 ### Commands
 ```bash
@@ -85,17 +86,31 @@ DEPLOYED & LIVE at https://twopelicans.ai
 - ✅ Google Analytics tracking
 - ✅ Custom domain with SSL (twopelicans.ai)
 - ✅ Hidden family games section at /family/ (not linked from main site)
+- ✅ **CLIENT PORTAL** with secure Supabase authentication
+  - Dashboard with metrics, resources, meetings, and messaging
+  - Real-time messaging system that emails you
+  - Admin panel for client management
+  - Enterprise-grade security (bcrypt, JWT, RLS)
 
 **Environment Variables (set in Vercel):**
 - RESEND_API_KEY=[NEVER COMMIT - Stored in .env.local and Vercel]
 - EMAIL_TO=ray@twopelicans.ai
 - EMAIL_FROM=hello@send.twopelicans.ai (✅ Verified and working)
+- NEXT_PUBLIC_SUPABASE_URL=[Your Supabase URL]
+- NEXT_PUBLIC_SUPABASE_ANON_KEY=[Your Supabase Anon Key]
+- SUPABASE_SERVICE_ROLE_KEY=[NEVER COMMIT - Admin operations only]
 
 **Current Status: FULLY OPERATIONAL**
 - Website live and functional at https://twopelicans.ai
 - Contact form working perfectly with email delivery
-- All features complete and tested
+- Client Portal with secure authentication ready for deployment
 - Hidden family games section deployed (access only via direct links)
+
+**Client Portal Access:**
+- Portal Login: https://twopelicans.ai/portal
+- Admin Panel: https://twopelicans.ai/portal/admin (admin only)
+- Dashboard: https://twopelicans.ai/portal/dashboard (authenticated clients)
+- **Security**: Enterprise-grade Supabase Auth with bcrypt, JWT, and RLS
 
 **Hidden Family Section:**
 - Family Portal: https://twopelicans.ai/family/

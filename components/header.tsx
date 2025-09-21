@@ -57,9 +57,16 @@ export function Header() {
           </div>
           
           <div className="flex items-center gap-4">
-            <Button 
+            <Button
+              onClick={() => router.push('/portal')}
+              variant="outline"
+              className="border-white/20 text-gray-300 hover:text-white hover:bg-white/10"
+            >
+              Client Portal
+            </Button>
+            <Button
               onClick={() => router.push('/contact')}
-              variant="default" 
+              variant="default"
               className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 shadow-lg shadow-cyan-500/25 transition-all hover:shadow-cyan-500/40"
             >
               Get Started
