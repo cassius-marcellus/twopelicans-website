@@ -1,14 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { LockIcon, UserIcon, ShieldCheckIcon } from "lucide-react"
 import { createSupabaseClient } from "@/lib/supabase"
 
 export default function ClientPortalLogin() {
-  const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -132,9 +131,9 @@ export default function ClientPortalLogin() {
           </div>
 
           <div className="mt-4 text-center">
-            <a href="/" className="text-gray-400 hover:text-cyan-400 text-sm transition-colors">
+            <Link href="/" className="text-gray-400 hover:text-cyan-400 text-sm transition-colors">
               ← Back to main site
-            </a>
+            </Link>
           </div>
         </div>
       </div>

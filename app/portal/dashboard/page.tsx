@@ -15,7 +15,6 @@ import {
   RocketIcon,
   ShieldCheckIcon,
   SendIcon,
-  InboxIcon,
   LoaderIcon
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -297,7 +296,7 @@ export default function ClientDashboard() {
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold text-white mb-2">Welcome back!</h2>
-                  <p className="text-gray-400">Here's your AI project overview</p>
+                  <p className="text-gray-400">Here&apos;s your AI project overview</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
