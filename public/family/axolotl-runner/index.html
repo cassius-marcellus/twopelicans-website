@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="description" content="Axolotl Runner - A fun underwater adventure game for kids" />
+    <title>Axolotl Runner</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(180deg, #1a4d8f 0%, #0d2847 100%);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        overflow: hidden;
+      }
+      #game-container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #phaser-game {
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+      }
+      canvas {
+        display: block;
+        margin: 0 auto;
+      }
+      .loading {
+        color: white;
+        font-size: 24px;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+    </style>
+    <script type="module" crossorigin src="./assets/main-CaDuSk2E.js"></script>
+  </head>
+  <body>
+    <div id="game-container">
+      <div class="loading">Loading Axolotl Runner...</div>
+    </div>
+  </body>
+</html>
