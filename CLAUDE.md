@@ -79,11 +79,12 @@ DEPLOYED & LIVE at https://twopelicans.ai
 - ✅ About page with custom "AI Deployment Partner" messaging
 - ✅ Blog section with 4 AI-focused articles (listing + individual pages)
 - ✅ Insights page for thought leadership
-- ✅ Contact form with Resend email integration (pending domain verification)
+- ✅ Contact form with Resend email integration (verified and working)
 - ✅ Dark futuristic theme with glass morphism
 - ✅ Fully responsive mobile-first design
 - ✅ Google Analytics tracking
 - ✅ Custom domain with SSL (twopelicans.ai)
+- ✅ Hidden family games section at /family/ (not linked from main site)
 
 **Environment Variables (set in Vercel):**
 - RESEND_API_KEY=[NEVER COMMIT - Stored in .env.local and Vercel]
@@ -94,6 +95,13 @@ DEPLOYED & LIVE at https://twopelicans.ai
 - Website live and functional at https://twopelicans.ai
 - Contact form working perfectly with email delivery
 - All features complete and tested
+- Hidden family games section deployed (access only via direct links)
+
+**Hidden Family Section:**
+- Family Portal: https://twopelicans.ai/family/
+- Axolotl Runner Game: https://twopelicans.ai/family/axolotl-runner/
+- NOT linked from main navigation - completely hidden
+- Kid-friendly design separate from professional business site
 
 Must convey trust, innovation, and technical excellence while remaining accessible to non-technical executives.
 

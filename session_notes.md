@@ -65,3 +65,29 @@ Security and branding improvements:
 - Professional appearance enhanced
 - Spam protection improved
 
+## Session: 2025-09-20 21:30
+Added hidden family games section with Axolotl Runner game:
+- Created `/family/` directory structure in public folder (not linked anywhere)
+- Deployed Axolotl Runner game at `/family/axolotl-runner/`
+- Created colorful, kid-friendly landing page at `/family/` with animations
+- Game files copied from `/Users/raykhatir/code/game-axolotl-runner/dist/`
+- NO changes to main business navigation - completely hidden from professional site
+- Only accessible via direct URLs - perfect for family sharing
+
+**Family Section Features:**
+- Animated sparkles and gradient backgrounds
+- Kid-friendly design with emojis and bright colors
+- Clear instructions for ages 5-9
+- Mobile/tablet friendly reminder
+- "Secret family game page" messaging
+
+**Access URLs:**
+- Family Portal: https://twopelicans.ai/family/
+- Axolotl Runner Game: https://twopelicans.ai/family/axolotl-runner/
+
+**Deployment:**
+- Committed and pushed to GitHub
+- Automatically deployed via Vercel
+- Professional business site remains completely unchanged
+- No SEO impact - hidden from search engines
+
