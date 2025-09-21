@@ -1,9 +1,11 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import AuthRedirect from "@/app/components/auth-redirect"
 
 export default function Home() {
   return (
     <>
+      <AuthRedirect />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-black via-gray-950 to-black">
         <div className="container mx-auto px-4 py-24 sm:py-32">
