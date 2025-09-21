@@ -65,6 +65,21 @@ Security and branding improvements:
 - Professional appearance enhanced
 - Spam protection improved
 
+## Session: 2025-09-21 (Portal Security Update)
+Successfully completed admin password change and fixed password reset functionality:
+- ✅ Changed admin password from default to secure password
+- ✅ Fixed password reset email flow that was expiring immediately
+- ✅ Added /portal/reset-password page for handling recovery tokens
+- ✅ Created auth redirect handler to detect recovery tokens on homepage
+- ✅ Added /auth/callback route for proper Supabase token exchange
+- ✅ Password reset now works for all users (admin and clients)
+
+**Key Fixes Applied:**
+- Prevented double-processing of recovery tokens that caused expiration
+- Added proper auth callback URL to Supabase redirect URLs
+- Used router.replace instead of push to avoid history issues
+- Password reset system now fully functional for production use
+
 ## Session: 2025-09-20 21:30
 Added hidden family games section with Axolotl Runner game:
 - Created `/family/` directory structure in public folder (not linked anywhere)
@@ -96,7 +111,7 @@ Added hidden family games section with Axolotl Runner game:
 - Game now properly loads at https://twopelicans.ai/family/axolotl-runner/
 - Verified working in production
 
-## Session: 2025-01-20 Evening
+## Session: 2025-09-20 Evening
 Major Security & Feature Upgrades:
 
 ### Client Portal Enhancements
