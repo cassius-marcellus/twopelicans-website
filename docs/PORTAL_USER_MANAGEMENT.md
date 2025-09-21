@@ -52,6 +52,16 @@ node scripts/portal-admin.js verify --email user@example.com
 node scripts/portal-admin.js delete --email user@example.com
 ```
 
+## Development Principles
+
+### CRITICAL: Never Downgrade to Fix
+- **If a dependency is missing:** Install it, don't disable the feature
+- **If a feature breaks:** Fix it properly, don't remove functionality
+- **If an integration fails:** Debug and repair, don't work around it
+- **Example:** When playwright module was missing for PDF generation, we installed it rather than disabling PDF features
+
+This principle ensures the system always moves forward in capability and robustness.
+
 ## Key Improvements Implemented
 
 ### 1. Enhanced API Endpoint (`/api/auth/users`)

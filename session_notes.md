@@ -80,6 +80,25 @@ Successfully completed admin password change and fixed password reset functional
 - Used router.replace instead of push to avoid history issues
 - Password reset system now fully functional for production use
 
+## Session: 2025-09-21 (Portal User Management)
+Created bulletproof portal user management system:
+- ✅ Enhanced API endpoint with transaction handling and automatic rollback
+- ✅ Built robust CLI tool (portal-admin.js) for user management
+- ✅ Created test account for Emily (ewkhatir@gmail.com)
+- ✅ Sent portal instructions via AI Assistant email account
+- ✅ Fixed missing playwright dependency (installed rather than disabling PDF features)
+- ✅ Documented complete user management workflow
+
+**Important Lesson Learned:**
+- NEVER downgrade functionality to fix bugs
+- When encountering missing dependencies, install them rather than disabling features
+- This principle has been added to all CLAUDE.md documentation
+
+**Portal Ready for Testing:**
+- Emily has credentials and instructions
+- All systems verified and working
+- Messages will email ray@twopelicans.ai
+
 ## Session: 2025-09-20 21:30
 Added hidden family games section with Axolotl Runner game:
 - Created `/family/` directory structure in public folder (not linked anywhere)

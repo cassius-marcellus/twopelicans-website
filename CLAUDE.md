@@ -164,6 +164,7 @@ Must convey trust, innovation, and technical excellence while remaining accessib
 - Follow Next.js 14 App Router best practices
 - **CRITICAL: NEVER downgrade functionality to fix errors - maintain or improve quality/robustness when fixing issues**
 - **Always preserve existing features when implementing fixes - discuss any functionality changes with user first**
+- **If a dependency is missing, install it - don't disable features to work around it**
 
 ## DO NOT
 - Create documentation files unless explicitly requested
