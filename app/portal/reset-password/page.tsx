@@ -18,14 +18,40 @@ export default function ResetPassword() {
   )
 
   useEffect(() => {
-    // Check if we have a valid session from the email link
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        setError('Invalid or expired reset link. Please request a new password reset.')
+    // Handle the recovery token from the URL hash
+    const handleRecoveryToken = async () => {
+      if (typeof window !== 'undefined') {
+        const hashParams = new URLSearchParams(window.location.hash.substring(1))
+        const accessToken = hashParams.get('access_token')
+        const refreshToken = hashParams.get('refresh_token')
+        const type = hashParams.get('type')
+
+        if (type === 'recovery' && accessToken) {
+          // Exchange the recovery token for a session
+          const { data, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken || ''
+          })
+
+          if (error) {
+            setError('Invalid or expired reset link. Please request a new password reset.')
+            console.error('Session error:', error)
+          } else if (!data.session) {
+            setError('Unable to verify reset link. Please request a new password reset.')
+          }
+
+          // Clear the hash from the URL
+          window.history.replaceState(null, '', window.location.pathname)
+        } else {
+          // Check if we already have a session
+          const { data: { session } } = await supabase.auth.getSession()
+          if (!session) {
+            setError('No valid reset session found. Please request a new password reset.')
+          }
+        }
       }
     }
-    checkSession()
+    handleRecoveryToken()
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
