@@ -11,69 +11,84 @@ import {
   KeyIcon,
   MailIcon,
   BuildingIcon,
-  CheckIcon
+  CheckIcon,
+  LoaderIcon,
+  LogOutIcon
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-
-interface ClientAccount {
-  email: string
-  password: string
-  company: string
-  createdAt: string
-  lastLogin?: string
-}
+import { createSupabaseClient } from "@/lib/supabase"
+import type { Profile } from "@/lib/supabase"
 
 export default function AdminPanel() {
   const router = useRouter()
+  const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
-  const [clients, setClients] = useState<ClientAccount[]>([])
+  const [currentUser, setCurrentUser] = useState<Profile | null>(null)
+  const [clients, setClients] = useState<Profile[]>([])
   const [showAddClient, setShowAddClient] = useState(false)
+  const [addingClient, setAddingClient] = useState(false)
   const [copied, setCopied] = useState<string | null>(null)
+  const [error, setError] = useState("")
   const [newClient, setNewClient] = useState({
     email: "",
     company: "",
     password: ""
   })
 
-  useEffect(() => {
-    // Check admin auth
-    const authToken = sessionStorage.getItem("clientAuth")
-    if (!authToken) {
-      router.push("/portal")
-      return
-    }
+  const supabase = createSupabaseClient()
 
-    try {
-      const userData = JSON.parse(atob(authToken))
-      // Only allow your admin account
-      if (userData.email === "ray@twopelicans.ai") {
-        setIsAdmin(true)
-        loadClients()
-      } else {
-        router.push("/portal/dashboard")
-      }
-    } catch {
-      router.push("/portal")
-    }
+  useEffect(() => {
+    checkAdminAccess()
   }, [router])
 
-  const loadClients = () => {
-    const storedClients = localStorage.getItem("portalClients")
-    if (storedClients) {
-      setClients(JSON.parse(storedClients))
-    } else {
-      // Initialize with demo account
-      const initialClients = [
-        {
-          email: "demo@client.com",
-          password: "demo2024",
-          company: "Demo Corp",
-          createdAt: new Date().toISOString()
-        }
-      ]
-      localStorage.setItem("portalClients", JSON.stringify(initialClients))
-      setClients(initialClients)
+  const checkAdminAccess = async () => {
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (!user) {
+        router.push("/portal")
+        return
+      }
+
+      // Get user profile
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single()
+
+      if (!profile || profile.role !== 'admin') {
+        router.push("/portal/dashboard")
+        return
+      }
+
+      setCurrentUser(profile)
+      setIsAdmin(true)
+      await loadClients()
+    } catch (error) {
+      console.error('Access check error:', error)
+      router.push("/portal")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const loadClients = async () => {
+    try {
+      const response = await fetch('/api/auth/users', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        // Filter out admin users from the client list
+        setClients(data.filter((user: Profile) => user.role !== 'admin'))
+      }
+    } catch (error) {
+      console.error('Failed to load clients:', error)
     }
   }
 
@@ -86,45 +101,98 @@ export default function AdminPanel() {
     setNewClient({ ...newClient, password })
   }
 
-  const addClient = () => {
+  const addClient = async () => {
     if (!newClient.email || !newClient.company || !newClient.password) {
-      alert("Please fill in all fields")
+      setError("Please fill in all fields")
       return
     }
 
-    const newAccount: ClientAccount = {
-      ...newClient,
-      createdAt: new Date().toISOString()
+    setAddingClient(true)
+    setError("")
+
+    try {
+      const response = await fetch('/api/auth/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: newClient.email,
+          company: newClient.company,
+          password: newClient.password
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.error || "Failed to create user")
+        return
+      }
+
+      // Reload clients list
+      await loadClients()
+
+      // Reset form
+      setNewClient({ email: "", company: "", password: "" })
+      setShowAddClient(false)
+    } catch (error) {
+      setError("Failed to create user. Please try again.")
+    } finally {
+      setAddingClient(false)
     }
-
-    const updatedClients = [...clients, newAccount]
-    setClients(updatedClients)
-    localStorage.setItem("portalClients", JSON.stringify(updatedClients))
-
-    // Reset form
-    setNewClient({ email: "", company: "", password: "" })
-    setShowAddClient(false)
   }
 
-  const removeClient = (email: string) => {
-    if (confirm("Are you sure you want to remove this client?")) {
-      const updatedClients = clients.filter(c => c.email !== email)
-      setClients(updatedClients)
-      localStorage.setItem("portalClients", JSON.stringify(updatedClients))
+  const removeClient = async (userId: string, email: string) => {
+    if (!confirm(`Are you sure you want to remove ${email}?`)) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/auth/users?id=${userId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      })
+
+      if (response.ok) {
+        await loadClients()
+      } else {
+        alert("Failed to remove client")
+      }
+    } catch (error) {
+      alert("Failed to remove client")
     }
   }
 
-  const copyCredentials = (client: ClientAccount) => {
-    const credentials = `Portal Access for ${client.company}\n\nURL: https://twopelicans.ai/portal\nEmail: ${client.email}\nPassword: ${client.password}\n\nPlease keep these credentials secure.`
+  const copyCredentials = (client: Profile, tempPassword?: string) => {
+    const credentials = `Portal Access for ${client.company}
+
+URL: https://twopelicans.ai/portal
+Email: ${client.email}
+${tempPassword ? `Password: ${tempPassword}` : 'Password: [Use existing password]'}
+
+Please keep these credentials secure and change your password after first login.`
+
     navigator.clipboard.writeText(credentials)
     setCopied(client.email)
     setTimeout(() => setCopied(null), 2000)
   }
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    router.push("/portal")
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 flex items-center justify-center">
+        <LoaderIcon className="w-8 h-8 text-cyan-400 animate-spin" />
+      </div>
+    )
+  }
+
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-white">Checking permissions...</div>
+        <div className="text-white">Access denied</div>
       </div>
     )
   }
@@ -137,13 +205,52 @@ export default function AdminPanel() {
             <h1 className="text-3xl font-bold text-white mb-2">Client Portal Admin</h1>
             <p className="text-gray-400">Manage client access to the portal</p>
           </div>
-          <Button
-            onClick={() => router.push("/portal/dashboard")}
-            variant="outline"
-            className="border-white/10 text-gray-300 hover:text-white hover:bg-white/10"
-          >
-            Back to Dashboard
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              onClick={() => router.push("/portal/dashboard")}
+              variant="outline"
+              className="border-white/10 text-gray-300 hover:text-white hover:bg-white/10"
+            >
+              View as Client
+            </Button>
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              className="border-white/10 text-gray-300 hover:text-white hover:bg-white/10"
+            >
+              <LogOutIcon className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="bg-gradient-to-br from-cyan-500/10 to-blue-600/10 border border-cyan-500/20 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-2">
+              <UserPlusIcon className="w-8 h-8 text-cyan-400" />
+              <span className="text-3xl font-bold text-white">{clients.length}</span>
+            </div>
+            <p className="text-gray-300 font-medium">Active Clients</p>
+            <p className="text-gray-500 text-sm">Total portal users</p>
+          </div>
+
+          <div className="bg-gradient-to-br from-purple-500/10 to-pink-600/10 border border-purple-500/20 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-2">
+              <ShieldCheckIcon className="w-8 h-8 text-purple-400" />
+              <span className="text-3xl font-bold text-white">Secure</span>
+            </div>
+            <p className="text-gray-300 font-medium">Supabase Auth</p>
+            <p className="text-gray-500 text-sm">Enterprise security</p>
+          </div>
+
+          <div className="bg-gradient-to-br from-green-500/10 to-emerald-600/10 border border-green-500/20 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-2">
+              <MailIcon className="w-8 h-8 text-green-400" />
+              <span className="text-3xl font-bold text-white">Active</span>
+            </div>
+            <p className="text-gray-300 font-medium">Message System</p>
+            <p className="text-gray-500 text-sm">Email notifications</p>
+          </div>
         </div>
 
         <div className="bg-gray-900/50 backdrop-blur-xl rounded-xl border border-white/10 p-6 mb-6">
@@ -215,17 +322,24 @@ export default function AdminPanel() {
                   </div>
                 </div>
               </div>
+              {error && (
+                <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+                  {error}
+                </div>
+              )}
               <div className="flex gap-3 mt-6">
                 <Button
                   onClick={addClient}
+                  disabled={addingClient}
                   className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                 >
-                  Create Account
+                  {addingClient ? "Creating..." : "Create Account"}
                 </Button>
                 <Button
                   onClick={() => {
                     setShowAddClient(false)
                     setNewClient({ email: "", company: "", password: "" })
+                    setError("")
                   }}
                   variant="outline"
                   className="border-white/10 text-gray-300 hover:text-white hover:bg-white/10"
@@ -237,71 +351,75 @@ export default function AdminPanel() {
           )}
 
           <div className="space-y-3">
-            {clients.map((client) => (
-              <div
-                key={client.email}
-                className="bg-gray-800/30 rounded-lg border border-white/10 p-4 hover:border-cyan-500/30 transition-all"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 rounded-lg flex items-center justify-center">
-                      <ShieldCheckIcon className="w-5 h-5 text-cyan-400" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <p className="text-white font-semibold">{client.company}</p>
-                        {client.email === "demo@client.com" && (
-                          <span className="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded">DEMO</span>
-                        )}
+            {clients.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-400">No clients yet. Add your first client above!</p>
+              </div>
+            ) : (
+              clients.map((client) => (
+                <div
+                  key={client.id}
+                  className="bg-gray-800/30 rounded-lg border border-white/10 p-4 hover:border-cyan-500/30 transition-all"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 rounded-lg flex items-center justify-center">
+                        <ShieldCheckIcon className="w-5 h-5 text-cyan-400" />
                       </div>
-                      <p className="text-gray-400 text-sm">{client.email}</p>
-                      <p className="text-gray-500 text-xs mt-1">
-                        Created: {new Date(client.createdAt).toLocaleDateString()}
-                        {client.lastLogin && ` • Last login: ${new Date(client.lastLogin).toLocaleDateString()}`}
-                      </p>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="text-white font-semibold">{client.company}</p>
+                          {!client.is_active && (
+                            <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded">INACTIVE</span>
+                          )}
+                        </div>
+                        <p className="text-gray-400 text-sm">{client.email}</p>
+                        <p className="text-gray-500 text-xs mt-1">
+                          Created: {new Date(client.created_at).toLocaleDateString()}
+                          {client.last_login && ` • Last login: ${new Date(client.last_login).toLocaleDateString()}`}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      onClick={() => copyCredentials(client)}
-                      size="sm"
-                      variant="ghost"
-                      className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10"
-                    >
-                      {copied === client.email ? (
-                        <CheckIcon className="w-4 h-4" />
-                      ) : (
-                        <CopyIcon className="w-4 h-4" />
-                      )}
-                    </Button>
-                    {client.email !== "demo@client.com" && (
+                    <div className="flex items-center gap-2">
                       <Button
-                        onClick={() => removeClient(client.email)}
+                        onClick={() => copyCredentials(client)}
+                        size="sm"
+                        variant="ghost"
+                        className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10"
+                      >
+                        {copied === client.email ? (
+                          <CheckIcon className="w-4 h-4" />
+                        ) : (
+                          <CopyIcon className="w-4 h-4" />
+                        )}
+                      </Button>
+                      <Button
+                        onClick={() => removeClient(client.id, client.email)}
                         size="sm"
                         variant="ghost"
                         className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
                       >
                         <TrashIcon className="w-4 h-4" />
                       </Button>
-                    )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
 
         <div className="bg-gradient-to-br from-cyan-500/10 to-blue-600/10 border border-cyan-500/20 rounded-xl p-6">
-          <h3 className="text-white font-semibold mb-2">Quick Setup Instructions</h3>
-          <ol className="text-gray-300 space-y-2 text-sm">
-            <li>1. Click "Add Client" to create a new account</li>
-            <li>2. Enter their email and company name</li>
-            <li>3. Generate a secure password or create your own</li>
-            <li>4. Click the copy button to get credentials to share</li>
-            <li>5. Send the credentials securely to your client</li>
-          </ol>
+          <h3 className="text-white font-semibold mb-2">Portal Management</h3>
+          <ul className="text-gray-300 space-y-2 text-sm">
+            <li>✓ Add new clients with secure passwords</li>
+            <li>✓ Copy credentials to share securely</li>
+            <li>✓ Remove client access when needed</li>
+            <li>✓ Monitor last login times</li>
+            <li>✓ All data synced with Supabase database</li>
+          </ul>
           <p className="text-gray-400 text-sm mt-4">
-            Note: Client credentials are stored locally. In production, use a secure database.
+            <strong>Security:</strong> Passwords are hashed with bcrypt. Never share passwords in plain text.
           </p>
         </div>
       </div>

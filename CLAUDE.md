@@ -157,6 +157,8 @@ Must convey trust, innovation, and technical excellence while remaining accessib
 - Use real content, no Lorem Ipsum or placeholders
 - Implement proper error handling and loading states
 - Follow Next.js 14 App Router best practices
+- **CRITICAL: NEVER downgrade functionality to fix errors - maintain or improve quality/robustness when fixing issues**
+- **Always preserve existing features when implementing fixes - discuss any functionality changes with user first**
 
 ## DO NOT
 - Create documentation files unless explicitly requested

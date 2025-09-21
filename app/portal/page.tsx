@@ -21,27 +21,39 @@ export default function ClientPortalLogin() {
     setIsLoading(true)
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+      // Sign in directly with Supabase client
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
       })
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        setError(data.error || "Login failed")
+      if (error) {
+        console.error('Login error:', error)
+        setError("Invalid email or password")
         setIsLoading(false)
         return
       }
 
+      // Wait a moment for session to be established
+      await new Promise(resolve => setTimeout(resolve, 500))
+
+      // Get user profile to check role
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user!.id)
+        .single()
+
+      console.log('Login successful, role:', profile?.role)
+
       // Redirect based on role
-      if (data.user.role === 'admin') {
-        router.push("/portal/admin")
+      if (profile?.role === 'admin') {
+        window.location.href = "/portal/admin"
       } else {
-        router.push("/portal/dashboard")
+        window.location.href = "/portal/dashboard"
       }
     } catch (err) {
+      console.error('Login catch error:', err)
       setError("An error occurred. Please try again.")
       setIsLoading(false)
     }

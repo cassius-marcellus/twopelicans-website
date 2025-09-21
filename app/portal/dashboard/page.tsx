@@ -15,55 +15,85 @@ import {
   RocketIcon,
   ShieldCheckIcon,
   SendIcon,
-  InboxIcon
+  InboxIcon,
+  LoaderIcon
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-
-interface UserData {
-  email: string
-  company: string
-}
+import { createSupabaseClient } from "@/lib/supabase"
+import type { Profile } from "@/lib/supabase"
 
 interface Message {
   id: string
   subject: string
-  content: string
-  sender: string
-  timestamp: string
-  isRead: boolean
-  type: 'sent' | 'received'
+  message: string
+  user_id: string
+  created_at: string
+  status: 'unread' | 'read' | 'replied'
 }
 
 export default function ClientDashboard() {
   const router = useRouter()
-  const [user, setUser] = useState<UserData | null>(null)
+  const [user, setUser] = useState<Profile | null>(null)
+  const [loading, setLoading] = useState(true)
   const [activeSection, setActiveSection] = useState("overview")
   const [messages, setMessages] = useState<Message[]>([])
   const [showCompose, setShowCompose] = useState(false)
   const [messageForm, setMessageForm] = useState({ subject: "", content: "" })
   const [sendingMessage, setSendingMessage] = useState(false)
 
+  const supabase = createSupabaseClient()
+
   useEffect(() => {
-    const authToken = sessionStorage.getItem("clientAuth")
-    if (!authToken) {
-      router.push("/portal")
-      return
-    }
-
-    try {
-      const userData = JSON.parse(atob(authToken)) as UserData
-      setUser(userData)
-
-      // Load messages from localStorage
-      const savedMessages = localStorage.getItem(`messages_${userData.email}`)
-      if (savedMessages) {
-        setMessages(JSON.parse(savedMessages))
-      }
-    } catch {
-      router.push("/portal")
-    }
+    checkAuth()
   }, [router])
+
+  const checkAuth = async () => {
+    try {
+      const { data: { user: authUser } } = await supabase.auth.getUser()
+
+      if (!authUser) {
+        router.push("/portal")
+        return
+      }
+
+      // Get user profile
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', authUser.id)
+        .single()
+
+      if (!profile || profile.role !== 'client') {
+        router.push("/portal")
+        return
+      }
+
+      setUser(profile)
+      await loadMessages(authUser.id)
+    } catch (error) {
+      console.error('Auth error:', error)
+      router.push("/portal")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const loadMessages = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+
+      if (!error && data) {
+        setMessages(data)
+      }
+    } catch (error) {
+      console.error('Failed to load messages:', error)
+    }
+  }
 
   const handleSendMessage = async () => {
     if (!messageForm.subject || !messageForm.content || !user) return
@@ -71,6 +101,25 @@ export default function ClientDashboard() {
     setSendingMessage(true)
 
     try {
+      // Save message to Supabase
+      const { data: newMessage, error: dbError } = await supabase
+        .from('messages')
+        .insert({
+          subject: messageForm.subject,
+          message: messageForm.content,
+          user_id: user.id,
+          status: 'unread'
+        })
+        .select()
+        .single()
+
+      if (dbError) {
+        console.error('Database error:', dbError)
+        alert('Failed to save message. Please try again.')
+        return
+      }
+
+      // Send email notification
       const response = await fetch('/api/portal-message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -82,44 +131,36 @@ export default function ClientDashboard() {
         })
       })
 
-      if (response.ok) {
-        const newMessage: Message = {
-          id: Date.now().toString(),
-          subject: messageForm.subject,
-          content: messageForm.content,
-          sender: user.company,
-          timestamp: new Date().toISOString(),
-          isRead: true,
-          type: 'sent'
-        }
-
-        const updatedMessages = [...messages, newMessage]
-        setMessages(updatedMessages)
-        localStorage.setItem(`messages_${user.email}`, JSON.stringify(updatedMessages))
-
+      if (response.ok && newMessage) {
+        setMessages([newMessage, ...messages])
         setMessageForm({ subject: "", content: "" })
         setShowCompose(false)
       } else {
-        alert('Failed to send message. Please try again.')
+        alert('Message saved but email notification failed.')
       }
     } catch (error) {
+      console.error('Send message error:', error)
       alert('Failed to send message. Please try again.')
     } finally {
       setSendingMessage(false)
     }
   }
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("clientAuth")
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
     router.push("/portal")
   }
 
-  if (!user) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 flex items-center justify-center">
+        <LoaderIcon className="w-8 h-8 text-cyan-400 animate-spin" />
       </div>
     )
+  }
+
+  if (!user) {
+    return null
   }
 
   const resources = [
@@ -478,39 +519,29 @@ export default function ClientDashboard() {
 
                 {messages.length > 0 ? (
                   <div className="space-y-4">
-                    {messages.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).map((message) => (
+                    {messages.map((message) => (
                       <div
                         key={message.id}
-                        className={`bg-gray-900/50 backdrop-blur-xl rounded-xl border ${
-                          message.type === 'sent' ? 'border-cyan-500/20' : 'border-purple-500/20'
-                        } p-6 hover:border-cyan-500/30 transition-all`}
+                        className="bg-gray-900/50 backdrop-blur-xl rounded-xl border border-cyan-500/20 p-6 hover:border-cyan-500/30 transition-all"
                       >
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3">
-                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                              message.type === 'sent'
-                                ? 'bg-gradient-to-br from-cyan-500/20 to-blue-600/20'
-                                : 'bg-gradient-to-br from-purple-500/20 to-pink-600/20'
-                            }`}>
-                              {message.type === 'sent' ? (
-                                <SendIcon className="w-5 h-5 text-cyan-400" />
-                              ) : (
-                                <InboxIcon className="w-5 h-5 text-purple-400" />
-                              )}
+                            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br from-cyan-500/20 to-blue-600/20">
+                              <SendIcon className="w-5 h-5 text-cyan-400" />
                             </div>
                             <div>
                               <h4 className="text-white font-semibold">{message.subject}</h4>
                               <p className="text-gray-400 text-sm">
-                                {message.type === 'sent' ? 'To: TwoPelicans Team' : `From: ${message.sender}`}
+                                To: TwoPelicans Team • Status: {message.status}
                               </p>
                             </div>
                           </div>
                           <span className="text-gray-500 text-sm">
-                            {new Date(message.timestamp).toLocaleDateString()}
+                            {new Date(message.created_at).toLocaleDateString()}
                           </span>
                         </div>
                         <div className="text-gray-300 whitespace-pre-wrap pl-13">
-                          {message.content}
+                          {message.message}
                         </div>
                       </div>
                     ))}

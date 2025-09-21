@@ -21,6 +21,7 @@ export async function POST(request: Request) {
     })
 
     if (error) {
+      console.error('Auth error:', error)
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }
@@ -40,7 +41,7 @@ export async function POST(request: Request) {
       .update({ last_login: new Date().toISOString() })
       .eq('id', data.user.id)
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       user: {
         id: data.user.id,
         email: data.user.email,
@@ -49,6 +50,26 @@ export async function POST(request: Request) {
       },
       session: data.session
     })
+
+    // Set cookies for the session
+    if (data.session) {
+      response.cookies.set('sb-access-token', data.session.access_token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7, // 1 week
+        path: '/'
+      })
+      response.cookies.set('sb-refresh-token', data.session.refresh_token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+        path: '/'
+      })
+    }
+
+    return response
   } catch (error) {
     console.error('Login error:', error)
     return NextResponse.json(
