@@ -40,8 +40,8 @@
 - Language: TypeScript/JavaScript
 - Framework: Next.js 15.5.2 (App Router + Turbopack) - for SEO, performance, and modern React features
 - Styling: Tailwind CSS + shadcn/ui components
-- Database: PostgreSQL (Supabase - ACTIVE)
-- Authentication: Supabase Auth (JWT, bcrypt, secure sessions)
+- Database: PostgreSQL (Supabase - ACTIVE with RLS policies)
+- Authentication: Supabase Auth (JWT, bcrypt, secure sessions, password reset)
 - Hosting: Vercel (seamless Next.js deployment) - LIVE at https://twopelicans.ai
 - Domain: Porkbun (twopelicans.ai) - DNS configured, SSL active
 - Package Manager: npm
@@ -86,7 +86,10 @@ DEPLOYED & LIVE at https://twopelicans.ai
 - ✅ Google Analytics tracking
 - ✅ Custom domain with SSL (twopelicans.ai)
 - ✅ Hidden family games section at /family/ (not linked from main site)
-- ✅ **CLIENT PORTAL** with secure Supabase authentication
+- ✅ **CLIENT PORTAL** at /portal with secure Supabase authentication
+- ✅ **ADMIN PANEL** at /portal/admin for client management
+- ✅ Password reset functionality via email
+- ✅ Client messaging system with email notifications
   - Dashboard with metrics, resources, meetings, and messaging
   - Real-time messaging system that emails you
   - Admin panel for client management
@@ -97,13 +100,15 @@ DEPLOYED & LIVE at https://twopelicans.ai
 - EMAIL_TO=ray@twopelicans.ai
 - EMAIL_FROM=hello@send.twopelicans.ai (✅ Verified and working)
 - NEXT_PUBLIC_SUPABASE_URL=[Your Supabase URL]
-- NEXT_PUBLIC_SUPABASE_ANON_KEY=[Your Supabase Anon Key]
+- NEXT_PUBLIC_SUPABASE_ANON_KEY=[Your Anon Key]
 - SUPABASE_SERVICE_ROLE_KEY=[NEVER COMMIT - Admin operations only]
 
 **Current Status: FULLY OPERATIONAL**
 - Website live and functional at https://twopelicans.ai
 - Contact form working perfectly with email delivery
-- Client Portal with secure authentication ready for deployment
+- Client Portal LIVE with secure authentication at https://twopelicans.ai/portal
+- Admin panel functional with client management capabilities
+- Password reset via email fully working (fixed 2025-09-21)
 - Hidden family games section deployed (access only via direct links)
 
 **Client Portal Access:**
